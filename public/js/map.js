@@ -4,28 +4,28 @@ const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
   zoom: 9,
-  center: [-73.887199, 40.701401]
+  center: [-73.887199, 40.701401],
 });
 
 // Fetch stores from API
 const getStores = async () => {
-  const res = await fetch('/api/v1/stores');
+  const res = await fetch('https://store--locator.herokuapp.com/api/v1/stores');
   const data = await res.json();
 
-  const stores = data.data.map(store => {
+  const stores = data.data.map((store) => {
     return {
       type: 'Feature',
       geometry: {
         type: 'Point',
         coordinates: [
           store.location.coordinates[0],
-          store.location.coordinates[1]
-        ]
+          store.location.coordinates[1],
+        ],
       },
       properties: {
         storeId: store.storeId,
-        icon: 'shop'
-      }
+        icon: 'shop',
+      },
     };
   });
 
@@ -34,13 +34,13 @@ const getStores = async () => {
 
 //Load map with stores
 function loadmap(stores) {
-  map.on('load', function() {
+  map.on('load', function () {
     map.addSource('point', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
-        features: stores
-      }
+        features: stores,
+      },
     });
     map.addLayer({
       id: 'points',
@@ -52,8 +52,8 @@ function loadmap(stores) {
         'text-field': '{storeId}',
         'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
         'text-offset': [0, 0.9],
-        'text-anchor': 'top'
-      }
+        'text-anchor': 'top',
+      },
     });
   });
 }
